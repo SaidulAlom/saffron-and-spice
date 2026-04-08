@@ -1,31 +1,57 @@
 import { supabase } from './supabase';
 import {
+  FALLBACK_MENU_ITEMS,
   FALLBACK_GALLERY_IMAGES,
   FALLBACK_TESTIMONIALS,
+  type GalleryImage,
   type MenuItem,
   type Testimonial,
-  type GalleryImage,
 } from '../constants';
 
+function getFallbackSignatureItems() {
+  return FALLBACK_MENU_ITEMS.filter(item => item.isSignature).slice(0, 4);
+}
+
 export async function fetchMenuItems(): Promise<MenuItem[]> {
-  const { data, error } = await supabase
-    .from('menu_items')
-    .select('*')
-    .order('id');
-  if (error) throw new Error(error.message);
-  return data ?? [];
+  try {
+    const { data, error } = await supabase
+      .from('menu_items')
+      .select('*')
+      .order('id');
+
+    if (error) {
+      console.warn('Unable to load menu from Supabase. Using fallback menu items.', error.message);
+      return FALLBACK_MENU_ITEMS;
+    }
+
+    const items = (data ?? []).map(mapMenuItem);
+    return items.length ? items : FALLBACK_MENU_ITEMS;
+  } catch (error) {
+    console.warn('Unexpected menu fetch failure. Using fallback menu items.', error);
+    return FALLBACK_MENU_ITEMS;
+  }
 }
 
 export async function fetchSignatureItems(): Promise<MenuItem[]> {
-  const { data, error } = await supabase
-    .from('menu_items')
-    .select('*')
-    .eq('is_signature', true)
-    .order('id')
-    .limit(4);
-  if (error) throw new Error(error.message);
-  // Map snake_case DB columns → camelCase interface
-  return (data ?? []).map(mapMenuItem);
+  try {
+    const { data, error } = await supabase
+      .from('menu_items')
+      .select('*')
+      .eq('is_signature', true)
+      .order('id')
+      .limit(4);
+
+    if (error) {
+      console.warn('Unable to load signature items from Supabase. Using fallback signature items.', error.message);
+      return getFallbackSignatureItems();
+    }
+
+    const items = (data ?? []).map(mapMenuItem);
+    return items.length ? items : getFallbackSignatureItems();
+  } catch (error) {
+    console.warn('Unexpected signature menu fetch failure. Using fallback signature items.', error);
+    return getFallbackSignatureItems();
+  }
 }
 
 export async function fetchTestimonials(): Promise<Testimonial[]> {
@@ -67,16 +93,15 @@ export async function fetchGalleryImages(): Promise<GalleryImage[]> {
   }
 }
 
-// Supabase stores snake_case; map to the MenuItem interface
 function mapMenuItem(row: Record<string, unknown>): MenuItem {
   return {
     id: String(row.id),
-    name: row.name as string,
-    description: row.description as string,
-    price: row.price as number,
-    category: row.category as string,
-    image: row.image as string,
-    spiceLevel: row.spice_level as number,
-    isSignature: row.is_signature as boolean | undefined,
+    name: String(row.name),
+    description: String(row.description),
+    price: Number(row.price),
+    category: String(row.category),
+    image: String(row.image),
+    spiceLevel: Number(row.spice_level ?? row.spiceLevel ?? 0),
+    isSignature: Boolean(row.is_signature ?? row.isSignature),
   };
 }
