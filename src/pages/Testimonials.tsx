@@ -1,19 +1,30 @@
 import { motion } from 'motion/react';
-import { Star, Quote, Loader2 } from 'lucide-react';
-import { fetchTestimonials } from '../lib/db';
-import { useSupabase } from '../hooks/useSupabase';
+import { Quote, Star } from 'lucide-react';
+import { ErrorState } from '../components/AsyncState';
 import { ImageWithFallback } from '../components/ImageWithFallback';
+import { TestimonialGridSkeleton } from '../components/Skeleton';
+import { useSEO } from '../hooks/useSEO';
+import { useSupabase } from '../hooks/useSupabase';
+import { fetchTestimonials } from '../lib/db';
 
 export default function Testimonials() {
-  const { data: testimonials, loading, error } = useSupabase(fetchTestimonials);
+  useSEO({
+    title: 'Testimonials',
+    path: '/testimonials',
+    description:
+      'Browse guest stories and social proof for the Saffron & Spice portfolio showcase.',
+    keywords: ['restaurant testimonials', 'social proof UI', 'portfolio review cards', 'guest stories page'],
+  });
+
+  const { data: testimonials, loading, error, retry } = useSupabase(fetchTestimonials);
 
   return (
-    <div className="pt-32 pb-24 space-y-24">
-      <section className="container mx-auto px-6 text-center space-y-8">
+    <div className="space-y-24 pb-24 pt-28 sm:pt-32">
+      <section className="container mx-auto px-4 text-center space-y-6 sm:px-6 sm:space-y-8">
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-5xl md:text-7xl font-serif leading-tight"
+          className="text-4xl leading-tight sm:text-5xl md:text-7xl"
         >
           Voices of our <span className="text-saffron italic">Guests</span>
         </motion.h1>
@@ -21,54 +32,55 @@ export default function Testimonials() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="text-xl opacity-70 leading-relaxed max-w-2xl mx-auto"
+          className="mx-auto max-w-3xl text-base leading-relaxed opacity-70 sm:text-lg md:text-xl"
         >
-          The greatest reward for our culinary passion is the joy of our diners. Read what our guests have to say about their royal journey.
+          The strongest showcase projects feel trustworthy at a glance. These testimonial cards help sell the atmosphere, quality, and hospitality story behind the brand.
         </motion.p>
       </section>
 
-      <section className="container mx-auto px-6">
-        {loading && (
-          <div className="flex items-center justify-center py-24 gap-3 opacity-60">
-            <Loader2 size={24} className="animate-spin text-saffron" />
-            <span>Loading testimonials...</span>
-          </div>
+      <section className="container mx-auto px-4 sm:px-6">
+        {loading && <TestimonialGridSkeleton count={6} />}
+
+        {error && !loading && (
+          <ErrorState
+            title="Unable to load testimonials"
+            message={error}
+            onRetry={retry}
+            className="mx-auto max-w-3xl"
+          />
         )}
-        {error && (
-          <div className="text-center py-24">
-            <p className="text-red-500 font-medium">Failed to load testimonials</p>
-            <p className="text-sm opacity-50 mt-1">{error}</p>
-          </div>
-        )}
+
         {!loading && !error && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {(testimonials ?? []).map((t, i) => (
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+            {(testimonials ?? []).map((testimonial, index) => (
               <motion.div
-                key={t.id}
+                key={testimonial.id}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className="p-10 motion-card bg-card rounded-3xl border border-subtle space-y-8 relative group hover:border-saffron/30 transition-all hover:shadow-2xl"
+                transition={{ delay: index * 0.08 }}
+                className="group relative space-y-8 rounded-3xl border border-subtle bg-card p-8 transition-all hover:border-saffron/30 hover:shadow-2xl md:p-10 motion-card"
                 data-tilt
               >
-                <div className="absolute top-8 right-8 text-saffron/10 group-hover:text-saffron/20 transition-colors">
-                  <Quote size={64} />
+                <div className="absolute right-6 top-6 text-saffron/10 transition-colors group-hover:text-saffron/20 md:right-8 md:top-8">
+                  <Quote size={58} />
                 </div>
                 <div className="flex gap-1 text-gold">
-                  {[...Array(t.rating)].map((_, i) => <Star key={`star-${t.id}-${i}`} size={18} fill="currentColor" />)}
+                  {[...Array(testimonial.rating)].map((_, starIndex) => (
+                    <Star key={`${testimonial.id}-${starIndex}`} size={18} fill="currentColor" />
+                  ))}
                 </div>
-                <p className="text-xl font-serif italic leading-relaxed relative z-10">"{t.review}"</p>
-                <div className="flex items-center gap-4 pt-4 border-t border-subtle">
+                <p className="relative z-10 text-lg leading-relaxed italic sm:text-xl">&quot;{testimonial.review}&quot;</p>
+                <div className="flex items-center gap-4 border-t border-subtle pt-4">
                   <ImageWithFallback
-                    src={t.image}
-                    alt={t.name}
-                    className="w-14 h-14 rounded-full object-cover border-2 border-saffron"
+                    src={testimonial.image}
+                    alt={testimonial.name}
+                    className="h-14 w-14 rounded-full border-2 border-saffron object-cover"
                     referrerPolicy="no-referrer"
                   />
                   <div>
-                    <h4 className="font-serif font-bold text-lg">{t.name}</h4>
-                    <p className="text-sm opacity-50">{t.location}</p>
+                    <h4 className="text-lg font-serif font-bold">{testimonial.name}</h4>
+                    <p className="text-sm opacity-50">{testimonial.location}</p>
                   </div>
                 </div>
               </motion.div>
@@ -77,18 +89,18 @@ export default function Testimonials() {
         )}
       </section>
 
-      <section className="container mx-auto px-6">
-        <div className="bg-maroon rounded-3xl p-12 md:p-20 text-white grid grid-cols-2 md:grid-cols-4 gap-12 text-center relative overflow-hidden">
-          <div className="absolute inset-0 opacity-10 mandala-bg scale-150" />
+      <section className="container mx-auto px-4 sm:px-6">
+        <div className="relative grid grid-cols-2 gap-6 overflow-hidden rounded-3xl bg-maroon p-8 text-center text-white sm:gap-8 sm:p-10 md:grid-cols-4 md:p-16">
+          <div className="absolute inset-0 scale-150 opacity-10 mandala-bg" />
           {[
             { label: 'Happy Guests', value: '50k+' },
             { label: 'Reviews', value: '5k+' },
-            { label: 'Rating', value: '4.9/5' },
+            { label: 'Average Rating', value: '4.9/5' },
             { label: 'Awards', value: '12' },
-          ].map((stat) => (
-            <div key={stat.label} className="space-y-2 relative z-10 motion-card rounded-2xl p-4" data-tilt>
-              <p className="text-4xl md:text-5xl font-serif text-gold">{stat.value}</p>
-              <p className="text-sm uppercase tracking-widest opacity-70">{stat.label}</p>
+          ].map(stat => (
+            <div key={stat.label} className="relative z-10 rounded-2xl p-4 motion-card" data-tilt>
+              <p className="text-3xl font-serif text-gold sm:text-4xl md:text-5xl">{stat.value}</p>
+              <p className="mt-2 text-xs uppercase tracking-widest opacity-70 sm:text-sm">{stat.label}</p>
             </div>
           ))}
         </div>

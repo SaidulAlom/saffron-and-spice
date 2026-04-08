@@ -2,9 +2,12 @@ node_modules
 .server-dist/
 build/
 dist/
+.server-dist/
 coverage/
 .DS_Store
 *.log
+public/robots.txt
+public/sitemap.xml
 .env*
 !.env.example
 

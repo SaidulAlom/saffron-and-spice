@@ -15,7 +15,7 @@ export function ErrorState({ title, message, onRetry, className = '' }: ErrorSta
       </div>
       <div className="space-y-2">
         <h3 className="text-2xl font-serif">{title}</h3>
-        <p className="mx-auto max-w-xl text-sm leading-relaxed opacity-65">
+        <p className="mx-auto max-w-xl text-sm leading-relaxed opacity-70">
           {message || 'Something interrupted this section. Please try again.'}
         </p>
       </div>

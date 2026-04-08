@@ -45,7 +45,16 @@ function AnimatedRoutes({ addToCart }: { addToCart: (item: MenuItem) => void }) 
 }
 
 export default function App() {
-  const [isDarkMode, setIsDarkMode] = useState(true);
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    try {
+      const saved = localStorage.getItem('theme');
+      if (saved === 'light') return false;
+      if (saved === 'dark') return true;
+      return true;
+    } catch {
+      return true;
+    }
+  });
   const [cartItems, setCartItems] = useState<{ item: MenuItem; quantity: number }[]>(() => {
     try {
       const saved = localStorage.getItem('cart');
@@ -64,6 +73,7 @@ export default function App() {
       document.documentElement.classList.remove('dark');
     }
     document.documentElement.style.colorScheme = isDarkMode ? 'dark' : 'light';
+    localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
   }, [isDarkMode]);
 
   const addToCart = (item: MenuItem) => {

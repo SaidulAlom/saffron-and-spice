@@ -1,69 +1,89 @@
 import { motion } from 'motion/react';
-import { Star, Leaf, Award, Users } from 'lucide-react';
+import { Award, Leaf, Star, Users } from 'lucide-react';
 import { ImageWithFallback } from '../components/ImageWithFallback';
+import { useSEO } from '../hooks/useSEO';
 
 export default function About() {
+  useSEO({
+    title: 'About',
+    path: '/about',
+    description:
+      'Read the story, culinary philosophy, and craft decisions behind the Saffron & Spice restaurant showcase.',
+    keywords: ['about restaurant website', 'brand story page', 'restaurant portfolio case study', 'culinary philosophy'],
+  });
+
   return (
-    <div className="pt-32 pb-24 space-y-24">
-      {/* Hero Section */}
-      <section className="container mx-auto px-6">
-        <div className="max-w-4xl mx-auto text-center space-y-8">
-          <motion.h1 
+    <div className="space-y-24 pb-24 pt-28 sm:pt-32">
+      <section className="container mx-auto px-4 sm:px-6">
+        <div className="mx-auto max-w-4xl space-y-6 text-center sm:space-y-8">
+          <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-5xl md:text-7xl font-serif leading-tight"
+            className="text-4xl leading-tight sm:text-5xl md:text-7xl"
           >
-            A Legacy of <span className="text-saffron italic">Taste & Tradition</span>
+            A Legacy of <span className="text-saffron italic">Taste &amp; Tradition</span>
           </motion.h1>
-          <motion.p 
+          <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-xl opacity-70 leading-relaxed"
+            className="text-base leading-relaxed opacity-70 sm:text-lg md:text-xl"
           >
-            Saffron & Spice was born from a simple yet profound desire: to bring the authentic, royal flavors of regional India to the modern table. Our journey began over 15 years ago in the vibrant streets of Silchar, Assam.
+            This story page blends heritage-inspired brand language with practical portfolio goals: trust, clarity, and a premium visual rhythm across desktop and mobile.
           </motion.p>
         </div>
       </section>
 
-      {/* Story Section */}
-      <section className="container mx-auto px-6">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+      <section className="container mx-auto px-4 sm:px-6">
+        <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16">
           <div className="space-y-8">
-            <h2 className="text-4xl font-serif">The Culinary Philosophy</h2>
-            <p className="text-lg opacity-80 leading-relaxed">
-              At Saffron & Spice, we believe that food is more than just sustenance; it's a bridge between cultures and a celebration of heritage. Our culinary philosophy is rooted in three core principles:
+            <h2 className="text-3xl sm:text-4xl">The Culinary Philosophy</h2>
+            <p className="text-base leading-relaxed opacity-80 sm:text-lg">
+              At Saffron &amp; Spice, food is presented as both experience design and cultural storytelling. The result is a polished case-study style page that still feels warm, human, and celebratory.
             </p>
             <ul className="space-y-6">
               {[
-                { title: 'Authenticity', desc: 'We use traditional cooking methods, including slow-cooking in clay ovens (tandoors) and hand-grinding our spice blends.', icon: <Star /> },
-                { title: 'Freshness', desc: 'Our ingredients are sourced daily from local farmers, ensuring that every dish is as fresh as it is flavorful.', icon: <Leaf /> },
-                { title: 'Innovation', desc: 'While we respect tradition, we are not afraid to innovate, presenting classic dishes with a contemporary flair.', icon: <Award /> }
-              ].map((item, i) => (
-                <motion.li 
+                {
+                  title: 'Authenticity',
+                  desc: 'Traditional techniques like tandoor roasting and house spice grinding shape the brand narrative.',
+                  icon: <Star />,
+                },
+                {
+                  title: 'Freshness',
+                  desc: 'Ingredient quality and local sourcing reinforce the premium positioning across both copy and visuals.',
+                  icon: <Leaf />,
+                },
+                {
+                  title: 'Innovation',
+                  desc: 'Modern interaction design gives the experience a portfolio-ready edge without losing warmth.',
+                  icon: <Award />,
+                },
+              ].map((item, index) => (
+                <motion.li
                   key={item.title}
                   initial={{ opacity: 0, x: -20 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
-                  transition={{ delay: i * 0.1 }}
+                  transition={{ delay: index * 0.08 }}
                   className="flex gap-4"
                 >
-                  <div className="w-10 h-10 bg-saffron/10 rounded-full flex items-center justify-center text-saffron flex-shrink-0">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-saffron/10 text-saffron">
                     {item.icon}
                   </div>
                   <div>
-                    <h4 className="font-serif text-xl mb-1">{item.title}</h4>
+                    <h4 className="mb-1 text-xl font-serif">{item.title}</h4>
                     <p className="opacity-60">{item.desc}</p>
                   </div>
                 </motion.li>
               ))}
             </ul>
           </div>
-          <div className="aspect-square rounded-2xl overflow-hidden shadow-2xl motion-card" data-tilt>
-            <ImageWithFallback 
-              src="https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&q=80&w=1000" 
-              alt="Chef preparing food" 
-              className="w-full h-full object-cover"
+
+          <div className="aspect-square overflow-hidden rounded-2xl shadow-2xl motion-card" data-tilt>
+            <ImageWithFallback
+              src="https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&q=80&w=1000"
+              alt="Chef preparing food"
+              className="h-full w-full object-cover"
               data-parallax
               data-parallax-speed="0.05"
               referrerPolicy="no-referrer"
@@ -72,70 +92,80 @@ export default function About() {
         </div>
       </section>
 
-      {/* Team Section */}
-      <section className="bg-card/50 py-24">
-        <div className="container mx-auto px-6">
-          <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-            <h2 className="text-saffron font-medium tracking-widest uppercase text-sm">Our Team</h2>
-            <h3 className="text-4xl md:text-5xl font-serif">The Masters of Spice</h3>
-            <p className="opacity-60">Meet the talented individuals who bring the magic of Saffron & Spice to your table every day.</p>
+      <section className="bg-card/50 py-20 sm:py-24">
+        <div className="container mx-auto px-4 sm:px-6">
+          <div className="mx-auto mb-14 max-w-3xl space-y-4 text-center sm:mb-16">
+            <h2 className="text-sm font-medium uppercase tracking-widest text-saffron">Our Team</h2>
+            <h3 className="text-3xl sm:text-4xl md:text-5xl">The Masters of Spice</h3>
+            <p className="opacity-60">A personality-rich team section gives the project more warmth and makes the brand feel lived in.</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+          <div className="grid grid-cols-1 gap-10 md:grid-cols-3 md:gap-12">
             {[
-              { name: 'Chef Rajesh Kumar', role: 'Executive Chef', img: 'https://images.unsplash.com/photo-1577219491135-ce391730fb2c?auto=format&fit=crop&q=80&w=800' },
-              { name: 'Chef Meera Iyer', role: 'Head of Pastry', img: 'https://images.unsplash.com/photo-1583394293214-28ded15ee548?auto=format&fit=crop&q=80&w=800' },
-              { name: 'Chef Amit Sharma', role: 'Tandoor Specialist', img: 'https://images.unsplash.com/photo-1566554273541-37a9ca77b91f?auto=format&fit=crop&q=80&w=800' }
-            ].map((member, i) => (
+              {
+                name: 'Chef Rajesh Kumar',
+                role: 'Executive Chef',
+                image: 'https://images.unsplash.com/photo-1577219491135-ce391730fb2c?auto=format&fit=crop&q=80&w=800',
+              },
+              {
+                name: 'Chef Meera Iyer',
+                role: 'Head of Pastry',
+                image: 'https://images.unsplash.com/photo-1583394293214-28ded15ee548?auto=format&fit=crop&q=80&w=800',
+              },
+              {
+                name: 'Chef Amit Sharma',
+                role: 'Tandoor Specialist',
+                image: 'https://images.unsplash.com/photo-1566554273541-37a9ca77b91f?auto=format&fit=crop&q=80&w=800',
+              },
+            ].map((member, index) => (
               <motion.div
                 key={member.name}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className="text-center space-y-4 group motion-card rounded-2xl"
+                transition={{ delay: index * 0.08 }}
+                className="space-y-4 rounded-2xl text-center group motion-card"
                 data-tilt
               >
-                <div className="aspect-[3/4] rounded-2xl overflow-hidden shadow-xl mb-6">
-                  <ImageWithFallback 
-                    src={member.img} 
-                    alt={member.name} 
+                <div className="mb-6 aspect-[3/4] overflow-hidden rounded-2xl shadow-xl">
+                  <ImageWithFallback
+                    src={member.image}
+                    alt={member.name}
                     fallbackSrc="https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&q=80&w=800"
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
-                    referrerPolicy="no-referrer" 
+                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    referrerPolicy="no-referrer"
                   />
                 </div>
                 <h4 className="text-2xl font-serif">{member.name}</h4>
-                <p className="text-saffron font-medium uppercase tracking-widest text-xs">{member.role}</p>
+                <p className="text-xs font-medium uppercase tracking-widest text-saffron">{member.role}</p>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className="container mx-auto px-6">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+      <section className="container mx-auto px-4 sm:px-6">
+        <div className="grid grid-cols-2 gap-6 md:grid-cols-4 md:gap-8">
           {[
             { label: 'Happy Diners', value: '50k+', icon: <Users /> },
             { label: 'Signature Dishes', value: '25+', icon: <Star /> },
             { label: 'Awards Won', value: '12', icon: <Award /> },
-            { label: 'Cities', value: '3', icon: <Leaf /> }
-          ].map((stat, i) => (
-            <motion.div 
+            { label: 'Cities', value: '3', icon: <Leaf /> },
+          ].map((stat, index) => (
+            <motion.div
               key={stat.label}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
-              className="text-center space-y-2 motion-card bg-card rounded-2xl border border-subtle p-6"
+              transition={{ delay: index * 0.08 }}
+              className="space-y-2 rounded-2xl border border-subtle bg-card p-5 text-center md:p-6 motion-card"
               data-tilt
             >
-              <div className="w-12 h-12 bg-saffron/10 rounded-full flex items-center justify-center text-saffron mx-auto mb-4">
+              <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-saffron/10 text-saffron">
                 {stat.icon}
               </div>
-              <h4 className="text-4xl font-serif text-saffron">{stat.value}</h4>
-              <p className="text-sm opacity-60 uppercase tracking-widest">{stat.label}</p>
+              <h4 className="text-3xl font-serif text-saffron sm:text-4xl">{stat.value}</h4>
+              <p className="text-xs uppercase tracking-widest opacity-60 sm:text-sm">{stat.label}</p>
             </motion.div>
           ))}
         </div>

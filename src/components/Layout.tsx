@@ -82,7 +82,7 @@ export default function Layout({ children, cartItems, updateQuantity, removeFrom
       <MotionEffects />
       {/* Navbar */}
       <nav className={`fixed top-0 w-full z-50 transition-all duration-500 bg-black/70 backdrop-blur-xl border-b border-white/10 shadow-lg text-white ${scrolled ? 'py-4' : 'py-6'}`}>
-        <div className="container mx-auto px-6 flex items-center justify-between">
+        <div className="container mx-auto px-4 sm:px-6 flex items-center justify-between gap-3">
           <Link to="/" className="flex items-center gap-2 group cursor-pointer nav-logo" data-cursor="hover">
             <div className="w-10 h-10 bg-saffron rounded-lg flex items-center justify-center text-white transform group-hover:rotate-12 transition-transform logo-mark">
               <Leaf size={24} />
@@ -153,7 +153,7 @@ export default function Layout({ children, cartItems, updateQuantity, removeFrom
                   <Link
                     to={link.path}
                     onClick={() => setIsMenuOpen(false)}
-                    className={`block text-4xl font-serif hover:text-saffron transition-colors nav-link-mobile ${location.pathname === link.path ? 'text-saffron' : ''}`}
+                    className={`block text-3xl sm:text-4xl font-serif hover:text-saffron transition-colors nav-link-mobile ${location.pathname === link.path ? 'text-saffron' : ''}`}
                   >
                     {link.name}
                   </Link>
@@ -196,11 +196,11 @@ export default function Layout({ children, cartItems, updateQuantity, removeFrom
       {/* Footer */}
       <footer className="relative border-t border-subtle bg-card/95 overflow-hidden">
         <div className="absolute inset-0 opacity-5 mandala-bg scale-150" />
-        <div className="container mx-auto px-6 py-16 relative" data-reveal>
+        <div className="container mx-auto px-4 sm:px-6 py-16 relative" data-reveal>
           <div className="mb-12 rounded-3xl border border-subtle bg-gradient-to-r from-maroon to-saffron text-white p-8 md:p-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 motion-card">
             <div className="space-y-3 max-w-2xl">
               <p className="text-xs uppercase tracking-[0.35em] text-white/70">Reserve Tonight</p>
-              <h2 className="text-3xl md:text-4xl font-serif">A footer that actually feels finished.</h2>
+              <h2 className="text-3xl md:text-4xl font-serif">Plan your next memorable dinner.</h2>
               <p className="text-white/80">
                 Reserve a table, explore the signature menu, or plan a private dining evening with the Saffron & Spice team.
               </p>
@@ -292,11 +292,11 @@ export default function Layout({ children, cartItems, updateQuantity, removeFrom
                 <div className="flex items-start gap-3">
                   <Clock size={18} className="text-saffron mt-0.5 shrink-0" />
                   <div className="space-y-2 w-full">
-                    <div className="flex items-center justify-between border-b border-subtle/60 pb-2 gap-4">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-subtle/60 pb-2 gap-1 sm:gap-4">
                       <span>Mon - Thu</span>
                       <span>12:00 PM - 11:00 PM</span>
                     </div>
-                    <div className="flex items-center justify-between border-b border-subtle/60 pb-2 gap-4">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-subtle/60 pb-2 gap-1 sm:gap-4">
                       <span>Fri - Sun</span>
                       <span>12:00 PM - 12:00 AM</span>
                     </div>
@@ -307,7 +307,7 @@ export default function Layout({ children, cartItems, updateQuantity, removeFrom
           </div>
 
           <div className="mt-12 pt-6 border-t border-subtle flex flex-col md:flex-row items-center justify-between gap-4 text-sm opacity-60">
-            <p>© 2026 Saffron & Spice. Crafted with passion in India.</p>
+            <p>&copy; 2026 Saffron & Spice. Crafted with care in India.</p>
             <div className="flex items-center gap-6">
               <Link to="/contact" className="hover:text-saffron transition-colors">Reservations & Events</Link>
               <Link to="/gallery" className="hover:text-saffron transition-colors">See the Space</Link>

@@ -5,13 +5,13 @@ interface SkeletonProps {
 
 export function Skeleton({ className = '' }: { className?: string }) {
   return (
-    <div className={`animate-pulse bg-stone-700/50 rounded ${className}`} />
+    <div className={`animate-pulse rounded bg-black/10 dark:bg-white/10 ${className}`} />
   );
 }
 
 export function CardSkeleton() {
   return (
-    <div className="rounded-xl overflow-hidden bg-stone-800/50 p-4 space-y-3">
+    <div className="space-y-3 overflow-hidden rounded-xl border border-subtle bg-card p-4">
       <Skeleton className="h-48 w-full rounded-lg" />
       <Skeleton className="h-5 w-2/3" />
       <Skeleton className="h-4 w-full" />
@@ -22,7 +22,7 @@ export function CardSkeleton() {
 
 export function CardGridSkeleton({ count = 6 }: SkeletonProps) {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {Array.from({ length: count }).map((_, i) => <CardSkeleton key={i} />)}
     </div>
   );

@@ -14,11 +14,8 @@
     "build": "node scripts/generate-seo-files.mjs && vite build && tsc -p tsconfig.server.json",
     "start": "node .server-dist/server/index.js",
     "preview": "vite preview",
-    "clean": "rm -rf dist",
+    "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true});require('fs').rmSync('.server-dist',{recursive:true,force:true})\"",
     "lint": "tsc --noEmit"
-  },
-  "engines": {
-    "node": ">=20"
   },
   "dependencies": {
     "@google/genai": "^1.29.0",

@@ -1,0 +1,16 @@
+{
+  "name": "Saffron & Spice",
+  "short_name": "Saffron & Spice",
+  "description": "A portfolio-ready Indian restaurant website with polished motion, reservations, and ordering flows.",
+  "theme_color": "#0b0b0b",
+  "background_color": "#0b0b0b",
+  "display": "standalone",
+  "start_url": "/",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "128x128",
+      "type": "image/svg+xml"
+    }
+  ]
+}

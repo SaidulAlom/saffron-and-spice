@@ -1,19 +1,29 @@
 import { motion } from 'motion/react';
-import { Loader2 } from 'lucide-react';
-import { fetchGalleryImages } from '../lib/db';
-import { useSupabase } from '../hooks/useSupabase';
+import { ErrorState } from '../components/AsyncState';
 import { ImageWithFallback } from '../components/ImageWithFallback';
+import { GalleryGridSkeleton } from '../components/Skeleton';
+import { useSEO } from '../hooks/useSEO';
+import { useSupabase } from '../hooks/useSupabase';
+import { fetchGalleryImages } from '../lib/db';
 
 export default function Gallery() {
-  const { data: images, loading, error } = useSupabase(fetchGalleryImages);
+  useSEO({
+    title: 'Gallery',
+    path: '/gallery',
+    description:
+      'See the ambience, plating, and design language behind the Saffron & Spice portfolio experience.',
+    keywords: ['restaurant gallery', 'food photography showcase', 'portfolio gallery page', 'fine dining visuals'],
+  });
+
+  const { data: images, loading, error, retry } = useSupabase(fetchGalleryImages);
 
   return (
-    <div className="pt-32 pb-24 space-y-24">
-      <section className="container mx-auto px-6 text-center space-y-8">
+    <div className="space-y-24 pb-24 pt-28 sm:pt-32">
+      <section className="container mx-auto px-4 text-center space-y-6 sm:px-6 sm:space-y-8">
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-5xl md:text-7xl font-serif leading-tight"
+          className="text-4xl leading-tight sm:text-5xl md:text-7xl"
         >
           Visual <span className="text-saffron italic">Feast</span>
         </motion.h1>
@@ -21,47 +31,46 @@ export default function Gallery() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="text-xl opacity-70 leading-relaxed max-w-2xl mx-auto"
+          className="mx-auto max-w-3xl text-base leading-relaxed opacity-70 sm:text-lg md:text-xl"
         >
-          Take a glimpse into the royal ambiance and culinary artistry of Saffron & Spice.
+          Take a closer look at the atmosphere, craftsmanship, and presentation that make the experience feel cinematic on every screen size.
         </motion.p>
       </section>
 
-      <section className="container mx-auto px-6">
-        {loading && (
-          <div className="flex items-center justify-center py-24 gap-3 opacity-60">
-            <Loader2 size={24} className="animate-spin text-saffron" />
-            <span>Loading gallery...</span>
-          </div>
+      <section className="container mx-auto px-4 sm:px-6">
+        {loading && <GalleryGridSkeleton count={6} />}
+
+        {error && !loading && (
+          <ErrorState
+            title="Unable to load the gallery"
+            message={error}
+            onRetry={retry}
+            className="mx-auto max-w-3xl"
+          />
         )}
-        {error && (
-          <div className="text-center py-24">
-            <p className="text-red-500 font-medium">Failed to load gallery</p>
-            <p className="text-sm opacity-50 mt-1">{error}</p>
-          </div>
-        )}
+
         {!loading && !error && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {(images ?? []).map((img, i) => (
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+            {(images ?? []).map((image, index) => (
               <motion.div
-                key={img.url}
-                initial={{ opacity: 0, scale: 0.9 }}
+                key={image.url}
+                initial={{ opacity: 0, scale: 0.94 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className="group motion-card relative aspect-square rounded-3xl overflow-hidden shadow-2xl cursor-pointer"
+                transition={{ delay: index * 0.08 }}
+                className="group relative aspect-square cursor-pointer overflow-hidden rounded-3xl shadow-2xl motion-card"
                 data-tilt
               >
                 <ImageWithFallback
-                  src={img.url}
-                  alt={img.title}
-                  className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
+                  src={image.url}
+                  alt={image.title}
+                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
                   referrerPolicy="no-referrer"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-8">
-                  <div className="space-y-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                    <h4 className="text-2xl font-serif text-white">{img.title}</h4>
-                    <div className="w-12 h-1 bg-saffron rounded-full" />
+                <div className="absolute inset-0 flex items-end bg-gradient-to-t from-black/80 via-transparent to-transparent p-6 opacity-0 transition-opacity duration-500 group-hover:opacity-100 sm:p-8">
+                  <div className="translate-y-4 space-y-2 transition-transform duration-500 group-hover:translate-y-0">
+                    <h4 className="text-xl font-serif text-white sm:text-2xl">{image.title}</h4>
+                    <div className="h-1 w-12 rounded-full bg-saffron" />
                   </div>
                 </div>
               </motion.div>
@@ -70,15 +79,17 @@ export default function Gallery() {
         )}
       </section>
 
-      <section className="container mx-auto px-6 text-center space-y-12">
+      <section className="container mx-auto px-4 text-center space-y-10 sm:px-6 sm:space-y-12">
         <div className="space-y-4">
           <h3 className="text-3xl font-serif">Follow our Journey</h3>
-          <p className="opacity-60">Join our community on Instagram for daily culinary inspiration.</p>
+          <p className="opacity-60">Shareable visuals, warm branding, and polished micro-interactions make this project presentation-ready.</p>
         </div>
         <div className="flex justify-center">
           <a
-            href="#"
-            className="px-10 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-full font-medium hover:scale-105 transition-all shadow-xl shadow-pink-500/20 magnetic-button"
+            href="https://instagram.com/saffronspice_royal"
+            target="_blank"
+            rel="noreferrer"
+            className="rounded-full bg-gradient-to-r from-purple-600 to-pink-600 px-10 py-4 font-medium text-white shadow-xl shadow-pink-500/20 transition-all hover:scale-105 magnetic-button"
             data-magnetic
           >
             @saffronspice_royal
