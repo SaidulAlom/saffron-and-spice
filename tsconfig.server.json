@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "allowJs": false,
+    "allowImportingTsExtensions": false,
+    "declaration": false,
+    "outDir": ".server-dist",
+    "rootDir": ".",
+    "noEmit": false
+  },
+  "include": ["server/**/*.ts"]
+}

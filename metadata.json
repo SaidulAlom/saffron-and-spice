@@ -1,0 +1,8 @@
+{
+  "name": "Saffron & Spice - Upscale Indian Fine Dining",
+  "description": "A premium Indian restaurant website featuring authentic regional cuisine, elegant design, and seamless reservation and ordering experiences.",
+  "model": "gemini-2.0-flash",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}

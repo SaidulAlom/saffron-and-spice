@@ -1,0 +1,19 @@
+﻿server/db.ts(14,25): error TS2339: Property 'dbPath' does not exist on type '{ readonly nodeEnv: string; readonly isProduction: boolean; readonly port: number; readonly corsOrigin: (origin: string, cb: (err: Error, allow?: boolean) => void) => void; readonly csrfSecret: string; readonly geminiApiKey: string; readonly supabaseUrl: string; readonly supabaseKey: string; }'.
+src/components/CheckoutModal.tsx(93,18): error TS2339: Property 'fields' does not exist on type 'ApiResult<{ orderId: string; grandTotal: number; }>'.
+  Property 'fields' does not exist on type 'ApiOk<{ orderId: string; grandTotal: number; }>'.
+src/components/CheckoutModal.tsx(95,47): error TS2339: Property 'fields' does not exist on type 'ApiResult<{ orderId: string; grandTotal: number; }>'.
+  Property 'fields' does not exist on type 'ApiOk<{ orderId: string; grandTotal: number; }>'.
+src/components/CheckoutModal.tsx(98,31): error TS2339: Property 'error' does not exist on type 'ApiResult<{ orderId: string; grandTotal: number; }>'.
+  Property 'error' does not exist on type 'ApiOk<{ orderId: string; grandTotal: number; }>'.
+src/components/ReservationModal.tsx(69,18): error TS2339: Property 'fields' does not exist on type 'ApiResult<unknown>'.
+  Property 'fields' does not exist on type 'ApiOk<unknown>'.
+src/components/ReservationModal.tsx(70,26): error TS2339: Property 'fields' does not exist on type 'ApiResult<unknown>'.
+  Property 'fields' does not exist on type 'ApiOk<unknown>'.
+src/components/ReservationModal.tsx(72,31): error TS2339: Property 'error' does not exist on type 'ApiResult<unknown>'.
+  Property 'error' does not exist on type 'ApiOk<unknown>'.
+src/pages/Contact.tsx(53,18): error TS2339: Property 'fields' does not exist on type 'ApiResult<unknown>'.
+  Property 'fields' does not exist on type 'ApiOk<unknown>'.
+src/pages/Contact.tsx(54,26): error TS2339: Property 'fields' does not exist on type 'ApiResult<unknown>'.
+  Property 'fields' does not exist on type 'ApiOk<unknown>'.
+src/pages/Contact.tsx(56,31): error TS2339: Property 'error' does not exist on type 'ApiResult<unknown>'.
+  Property 'error' does not exist on type 'ApiOk<unknown>'.
