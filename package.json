@@ -3,16 +3,22 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "scripts": {
     "dev": "vite --port=3000 --host=0.0.0.0",
     "server": "tsc -p tsconfig.server.json && node .server-dist/server/index.js",
     "server:watch": "tsx watch server/index.ts",
     "dev:all": "npm run server & npm run dev",
-    "build": "vite build && tsc -p tsconfig.server.json",
+    "build": "node scripts/generate-seo-files.mjs && vite build && tsc -p tsconfig.server.json",
     "start": "node .server-dist/server/index.js",
     "preview": "vite preview",
     "clean": "rm -rf dist",
     "lint": "tsc --noEmit"
+  },
+  "engines": {
+    "node": ">=20"
   },
   "dependencies": {
     "@google/genai": "^1.29.0",
