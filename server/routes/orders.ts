@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { randomBytes } from 'node:crypto';
-import { supabase } from '../lib/supabase.js';
+import { getSupabase, SUPABASE_UNAVAILABLE_MESSAGE } from '../lib/supabase.js';
 import { ok, validationError, fail } from '../lib/respond.js';
 import * as v from '../lib/validate.js';
 
@@ -76,6 +76,12 @@ router.post('/', async (req, res) => {
   const orderId       = generateOrderId();
   const computedTax   = Math.round(computedSubtotal * 0.05);
   const computedTotal = computedSubtotal + computedTax;
+  const supabase = getSupabase();
+
+  if (!supabase) {
+    fail(res, 503, SUPABASE_UNAVAILABLE_MESSAGE);
+    return;
+  }
 
   // Insert order header
   const { data: order, error: orderError } = await supabase

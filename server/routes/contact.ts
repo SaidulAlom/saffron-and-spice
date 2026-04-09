@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { supabase } from '../lib/supabase.js';
+import { getSupabase, SUPABASE_UNAVAILABLE_MESSAGE } from '../lib/supabase.js';
 import { ok, validationError, fail } from '../lib/respond.js';
 import * as v from '../lib/validate.js';
 
@@ -15,6 +15,12 @@ router.post('/', async (req, res) => {
     [v.required(message, 'Message'), 'message'],
   ]);
   if (errors) { validationError(res, errors); return; }
+
+  const supabase = getSupabase();
+  if (!supabase) {
+    fail(res, 503, SUPABASE_UNAVAILABLE_MESSAGE);
+    return;
+  }
 
   const { data, error } = await supabase
     .from('contacts')

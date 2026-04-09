@@ -11,6 +11,15 @@
 import { createClient } from '@supabase/supabase-js';
 import { config } from '../config.js';
 
-export const supabase = createClient(config.supabaseUrl, config.supabaseKey, {
-  auth: { persistSession: false },
-});
+export const SUPABASE_UNAVAILABLE_MESSAGE =
+  'Supabase is not configured on the server. Please try again later.';
+
+const supabase = config.supabaseUrl && config.supabaseKey
+  ? createClient(config.supabaseUrl, config.supabaseKey, {
+      auth: { persistSession: false },
+    })
+  : null;
+
+export function getSupabase() {
+  return supabase;
+}
