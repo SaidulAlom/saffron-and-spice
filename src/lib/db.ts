@@ -13,6 +13,8 @@ function getFallbackSignatureItems() {
 }
 
 export async function fetchMenuItems(): Promise<MenuItem[]> {
+  if (!supabase) return FALLBACK_MENU_ITEMS;
+
   try {
     const { data, error } = await supabase
       .from('menu_items')
@@ -33,6 +35,8 @@ export async function fetchMenuItems(): Promise<MenuItem[]> {
 }
 
 export async function fetchSignatureItems(): Promise<MenuItem[]> {
+  if (!supabase) return getFallbackSignatureItems();
+
   try {
     const { data, error } = await supabase
       .from('menu_items')
@@ -55,6 +59,8 @@ export async function fetchSignatureItems(): Promise<MenuItem[]> {
 }
 
 export async function fetchTestimonials(): Promise<Testimonial[]> {
+  if (!supabase) return FALLBACK_TESTIMONIALS;
+
   try {
     const { data, error } = await supabase
       .from('testimonials')
@@ -74,6 +80,8 @@ export async function fetchTestimonials(): Promise<Testimonial[]> {
 }
 
 export async function fetchGalleryImages(): Promise<GalleryImage[]> {
+  if (!supabase) return FALLBACK_GALLERY_IMAGES;
+
   try {
     const { data, error } = await supabase
       .from('gallery_images')
