@@ -176,7 +176,7 @@ export default function Home() {
           )}
 
           {!signatureLoading && !signatureError && (
-            <div className="mb-12 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
+            <div className="mb-12 grid grid-cols-[repeat(auto-fit,minmax(260px,320px))] justify-center gap-8">
               {(signatureItems ?? []).map(item => (
                 <div
                   key={item.id}

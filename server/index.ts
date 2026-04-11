@@ -154,9 +154,10 @@ if (config.geminiApiKey) {
 
 if (config.isProduction) {
   const __dirname = path.dirname(fileURLToPath(import.meta.url));
+  // Works from both .server-dist/server/ and project root
   const distPath = path.resolve(__dirname, '../../dist');
-  app.use(express.static(distPath));
-  app.get('*', (_req, res) => {
+  app.use(express.static(distPath, { maxAge: '1y', immutable: true }));
+  app.get('*splat', (_req, res) => {
     res.sendFile(path.join(distPath, 'index.html'));
   });
 } else {
