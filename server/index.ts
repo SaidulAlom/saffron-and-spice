@@ -66,7 +66,7 @@ app.use(
         frameAncestors: ["'self'"],
         scriptSrc: ["'self'", "'unsafe-inline'"],
         styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
-        imgSrc: ["'self'", 'data:', 'blob:', ...externalImageSources],
+        imgSrc: ["'self'", 'data:', 'blob:', 'https:'],
         connectSrc: ["'self'", ...externalConnectSources],
         fontSrc: ["'self'", 'data:', 'https://fonts.gstatic.com'],
         frameSrc: ["'self'", 'https://www.google.com'],
