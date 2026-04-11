@@ -79,7 +79,7 @@ create table if not exists orders (
   subtotal       integer not null,             -- in paise / rupees (stored as integer)
   tax            integer not null,
   total          integer not null,
-  status         text not null default 'placed' check (status in ('placed', 'preparing', 'out_for_delivery', 'delivered', 'cancelled')),
+  status         text not null default 'placed' check (status in ('placed', 'confirmed', 'preparing', 'out_for_delivery', 'delivered', 'cancelled')),
   created_at     timestamptz not null default now(),
   updated_at     timestamptz not null default now()
 );
@@ -87,6 +87,11 @@ create table if not exists orders (
 create index if not exists orders_order_id_idx    on orders (order_id);
 create index if not exists orders_created_at_idx  on orders (created_at desc);
 create index if not exists orders_status_idx      on orders (status);
+
+alter table if exists orders drop constraint if exists orders_status_check;
+alter table if exists orders
+  add constraint orders_status_check
+  check (status in ('placed', 'confirmed', 'preparing', 'out_for_delivery', 'delivered', 'cancelled'));
 
 -- 7. ORDER ITEMS
 create table if not exists order_items (
@@ -99,6 +104,31 @@ create table if not exists order_items (
 );
 
 create index if not exists order_items_order_id_idx on order_items (order_id);
+
+create or replace function set_updated_at()
+returns trigger
+language plpgsql
+as $$
+begin
+  new.updated_at = now();
+  return new;
+end;
+$$;
+
+drop trigger if exists set_contacts_updated_at on contacts;
+create trigger set_contacts_updated_at
+before update on contacts
+for each row execute function set_updated_at();
+
+drop trigger if exists set_reservations_updated_at on reservations;
+create trigger set_reservations_updated_at
+before update on reservations
+for each row execute function set_updated_at();
+
+drop trigger if exists set_orders_updated_at on orders;
+create trigger set_orders_updated_at
+before update on orders
+for each row execute function set_updated_at();
 
 -- ============================================================
 -- SEED DATA

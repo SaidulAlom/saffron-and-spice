@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, MapPin, CreditCard, Smartphone, Banknote, CheckCircle, Loader2, ChevronRight, ChevronLeft } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { MenuItem } from '../constants';
 import { isApiError, post } from '../lib/api';
+import { getOrderStatusMessage } from '../lib/orders';
 
 interface CheckoutModalProps {
   isOpen: boolean;
@@ -32,6 +34,7 @@ function validateDelivery(d: DeliveryForm): DeliveryErrors {
 const TAXES = 0.05;
 
 export default function CheckoutModal({ isOpen, onClose, cartItems, total, onOrderSuccess }: CheckoutModalProps) {
+  const navigate = useNavigate();
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [delivery, setDelivery] = useState<DeliveryForm>(INITIAL_DELIVERY);
   const [deliveryErrors, setDeliveryErrors] = useState<DeliveryErrors>({});
@@ -43,7 +46,7 @@ export default function CheckoutModal({ isOpen, onClose, cartItems, total, onOrd
   const [paymentError, setPaymentError] = useState('');
   const [serverError, setServerError] = useState('');
   const [processing, setProcessing] = useState(false);
-  const [confirmedOrderId, setConfirmedOrderId] = useState('');
+  const [placedOrderId, setPlacedOrderId] = useState('');
 
   const tax = Math.round(total * TAXES);
   const grandTotal = total + tax;
@@ -75,7 +78,7 @@ export default function CheckoutModal({ isOpen, onClose, cartItems, total, onOrd
 
     setProcessing(true);
 
-    const result = await post<{ orderId: string; grandTotal: number }>('/api/orders', {
+    const result = await post<{ orderId: string; grandTotal: number; status: 'placed' }>('/api/orders', {
       delivery,
       items: cartItems.map(({ item, quantity }) => ({
         id: item.id,
@@ -98,7 +101,7 @@ export default function CheckoutModal({ isOpen, onClose, cartItems, total, onOrd
       return;
     }
 
-    setConfirmedOrderId(result.data.orderId);
+    setPlacedOrderId(result.data.orderId);
     setStep(3);
     onOrderSuccess();
   };
@@ -113,8 +116,14 @@ export default function CheckoutModal({ isOpen, onClose, cartItems, total, onOrd
       setUpiId(''); setCardNumber(''); setCardExpiry(''); setCardCvv('');
       setPaymentError('');
       setServerError('');
-      setConfirmedOrderId('');
+      setPlacedOrderId('');
     }, 300);
+  };
+
+  const handleTrackOrder = () => {
+    if (!placedOrderId) return;
+    handleClose();
+    navigate(`/order-lookup?orderId=${encodeURIComponent(placedOrderId)}`);
   };
 
   const inputCls = (err?: string) =>
@@ -337,16 +346,22 @@ export default function CheckoutModal({ isOpen, onClose, cartItems, total, onOrd
                     </motion.div>
                     <div className="space-y-2">
                       <h3 className="text-3xl font-serif">Order Placed!</h3>
-                      <p className="text-sm opacity-60">Order ID: <span className="font-mono font-bold opacity-100">{confirmedOrderId}</span></p>
+                      <p className="text-sm opacity-60">Order ID: <span className="font-mono font-bold opacity-100">{placedOrderId}</span></p>
                       <p className="opacity-60 max-w-xs text-sm">
-                        Your order is confirmed and will be delivered to{' '}
+                        {getOrderStatusMessage('placed')}{' '}
+                        It will be delivered to{' '}
                         <span className="font-medium opacity-100">{delivery.address}, {delivery.city}</span>.
                         Estimated delivery: <span className="font-medium opacity-100">30–45 mins</span>.
                       </p>
                     </div>
-                    <button onClick={handleClose} className="px-8 py-3 bg-saffron hover:bg-saffron-dark text-white rounded-xl font-medium transition-all magnetic-button" data-magnetic>
-                      Done
-                    </button>
+                    <div className="flex flex-col gap-3 sm:flex-row">
+                      <button onClick={handleTrackOrder} className="px-8 py-3 bg-saffron hover:bg-saffron-dark text-white rounded-xl font-medium transition-all magnetic-button" data-magnetic>
+                        Track Order
+                      </button>
+                      <button onClick={handleClose} className="px-8 py-3 border border-subtle hover:border-saffron rounded-xl font-medium transition-all micro-button">
+                        Done
+                      </button>
+                    </div>
                   </motion.div>
                 )}
 

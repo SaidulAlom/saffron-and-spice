@@ -33,6 +33,26 @@ import ordersRouter from './routes/orders.js';
 
 const app = express();
 
+function getOrigin(value: string): string | null {
+  if (!value) return null;
+  try {
+    return new URL(value).origin;
+  } catch {
+    return null;
+  }
+}
+
+const supabaseOrigin = getOrigin(config.supabaseUrl);
+const externalImageSources = [
+  'https://images.unsplash.com',
+  ...(supabaseOrigin ? [supabaseOrigin] : []),
+];
+const externalConnectSources = [
+  ...(supabaseOrigin ? [supabaseOrigin] : []),
+  'https://*.supabase.co',
+  'wss://*.supabase.co',
+];
+
 // ── Security headers ───────────────────────────────────────────────────────
 
 app.use(
@@ -40,12 +60,16 @@ app.use(
     contentSecurityPolicy: config.isProduction ? {
       directives: {
         defaultSrc: ["'self'"],
+        baseUri: ["'self'"],
+        objectSrc: ["'none'"],
+        formAction: ["'self'"],
+        frameAncestors: ["'self'"],
         scriptSrc: ["'self'", "'unsafe-inline'"],
-        styleSrc: ["'self'", "'unsafe-inline'"],
-        imgSrc: ["'self'", 'data:', 'https://images.unsplash.com'],
-        connectSrc: ["'self'", 'https://*.supabase.co'],
-        fontSrc: ["'self'", 'data:'],
-        frameSrc: ["'none'"],
+        styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
+        imgSrc: ["'self'", 'data:', 'blob:', ...externalImageSources],
+        connectSrc: ["'self'", ...externalConnectSources],
+        fontSrc: ["'self'", 'data:', 'https://fonts.gstatic.com'],
+        frameSrc: ["'self'", 'https://www.google.com'],
       },
     } : false,
   }),

@@ -9,6 +9,7 @@ import Experiences from './pages/Experiences';
 import Testimonials from './pages/Testimonials';
 import Gallery from './pages/Gallery';
 import Contact from './pages/Contact';
+import OrderLookup from './pages/OrderLookup';
 import { MenuItem } from './constants';
 import ErrorBoundary from './components/ErrorBoundary';
 import NotFound from './pages/NotFound';
@@ -37,6 +38,7 @@ function AnimatedRoutes({ addToCart }: { addToCart: (item: MenuItem) => void }) 
           <Route path="/testimonials" element={<Testimonials />} />
           <Route path="/gallery" element={<Gallery />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/order-lookup" element={<OrderLookup />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </motion.div>

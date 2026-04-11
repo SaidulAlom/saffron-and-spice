@@ -56,6 +56,7 @@ export default function Layout({ children, cartItems, updateQuantity, removeFrom
     { name: 'Home', path: '/' },
     { name: 'About', path: '/about' },
     { name: 'Menu', path: '/menu' },
+    { name: 'Track Order', path: '/order-lookup' },
     { name: 'Experiences', path: '/experiences' },
     { name: 'Testimonials', path: '/testimonials' },
     { name: 'Gallery', path: '/gallery' },
@@ -65,6 +66,7 @@ export default function Layout({ children, cartItems, updateQuantity, removeFrom
   const footerLinks = [
     { name: 'About Us', path: '/about' },
     { name: 'Signature Menu', path: '/menu' },
+    { name: 'Track Order', path: '/order-lookup' },
     { name: 'Dining Experiences', path: '/experiences' },
     { name: 'Guest Stories', path: '/testimonials' },
     { name: 'Gallery', path: '/gallery' },
@@ -310,6 +312,7 @@ export default function Layout({ children, cartItems, updateQuantity, removeFrom
             <p>&copy; 2026 Saffron & Spice. Crafted with care in India.</p>
             <div className="flex items-center gap-6">
               <Link to="/contact" className="hover:text-saffron transition-colors">Reservations & Events</Link>
+              <Link to="/order-lookup" className="hover:text-saffron transition-colors">Track Order</Link>
               <Link to="/gallery" className="hover:text-saffron transition-colors">See the Space</Link>
             </div>
           </div>
