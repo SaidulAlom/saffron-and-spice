@@ -37,8 +37,17 @@ const app = express();
 
 app.use(
   helmet({
-    // CSP is set by the frontend (Vite). Don't interfere during dev.
-    contentSecurityPolicy: config.isProduction,
+    contentSecurityPolicy: config.isProduction ? {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'", "'unsafe-inline'"],
+        styleSrc: ["'self'", "'unsafe-inline'"],
+        imgSrc: ["'self'", 'data:', 'https://images.unsplash.com'],
+        connectSrc: ["'self'", 'https://*.supabase.co'],
+        fontSrc: ["'self'", 'data:'],
+        frameSrc: ["'none'"],
+      },
+    } : false,
   }),
 );
 
