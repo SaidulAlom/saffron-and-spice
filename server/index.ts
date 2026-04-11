@@ -57,7 +57,7 @@ const externalConnectSources = [
 
 app.use(
   helmet({
-    contentSecurityPolicy: config.isProduction ? {
+    contentSecurityPolicy: {
       directives: {
         defaultSrc: ["'self'"],
         baseUri: ["'self'"],
@@ -71,7 +71,7 @@ app.use(
         fontSrc: ["'self'", 'data:', 'https://fonts.gstatic.com'],
         frameSrc: ["'self'", 'https://www.google.com'],
       },
-    } : false,
+    },
   }),
 );
 
