@@ -166,7 +166,7 @@ if (config.isProduction) {
   // Works from both .server-dist/server/ and project root
   const distPath = path.resolve(__dirname, '../../dist');
   app.use(express.static(distPath, { maxAge: '1y', immutable: true }));
-  app.get('*splat', (_req, res) => {
+  app.get('*', (_req, res) => {
     res.sendFile(path.join(distPath, 'index.html'));
   });
 } else {
