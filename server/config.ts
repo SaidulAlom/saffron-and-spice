@@ -5,7 +5,9 @@
  */
 
 import dotenv from 'dotenv';
-dotenv.config({ path: '.env.local' });
+if (process.env.NODE_ENV !== 'production') {
+  dotenv.config({ path: '.env.local' });
+}
 
 function optional(key: string, fallback: string): string {
   return process.env[key] ?? fallback;
@@ -20,6 +22,7 @@ const allowedOrigins = new Set(
     'http://localhost:3002',
     'http://localhost:5173',
     process.env.APP_URL,
+    process.env.RENDER_EXTERNAL_URL,
   ].filter(Boolean) as string[],
 );
 
@@ -34,7 +37,10 @@ export const config = {
     origin: string | undefined,
     cb: (err: Error | null, allow?: boolean) => void,
   ) {
+    // No origin = same-origin request (e.g. server serving its own frontend)
     if (!origin || allowedOrigins.has(origin)) return cb(null, true);
+    // In production allow any https subdomain of onrender.com as fallback
+    if (isProduction && origin.endsWith('.onrender.com')) return cb(null, true);
     cb(new Error(`CORS: origin ${origin} not allowed`));
   },
 
