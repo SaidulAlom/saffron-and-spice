@@ -87,7 +87,7 @@ export default function Menu({ onAddToCart }: MenuProps) {
                 message="Switch categories or check back later for updated menu content."
               />
             ) : (
-              <motion.div layout className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 <AnimatePresence mode="popLayout">
                   {filteredItems.map(item => (
                     <motion.div
@@ -135,7 +135,7 @@ export default function Menu({ onAddToCart }: MenuProps) {
                     </motion.div>
                   ))}
                 </AnimatePresence>
-              </motion.div>
+              </div>
             )}
           </>
         )}

@@ -1,19 +1,32 @@
-import React, { useState, useEffect } from 'react';
+import React, { lazy, Suspense, useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'motion/react';
 import Layout from './components/Layout';
-import Home from './pages/Home';
-import About from './pages/About';
-import Menu from './pages/Menu';
-import Experiences from './pages/Experiences';
-import Testimonials from './pages/Testimonials';
-import Gallery from './pages/Gallery';
-import Contact from './pages/Contact';
-import OrderLookup from './pages/OrderLookup';
 import { MenuItem } from './constants';
 import ErrorBoundary from './components/ErrorBoundary';
-import NotFound from './pages/NotFound';
 import { trackPageView } from './lib/analytics';
+
+const Home         = lazy(() => import('./pages/Home'));
+const About        = lazy(() => import('./pages/About'));
+const Menu         = lazy(() => import('./pages/Menu'));
+const Experiences  = lazy(() => import('./pages/Experiences'));
+const Testimonials = lazy(() => import('./pages/Testimonials'));
+const Gallery      = lazy(() => import('./pages/Gallery'));
+const Contact      = lazy(() => import('./pages/Contact'));
+const OrderLookup  = lazy(() => import('./pages/OrderLookup'));
+const NotFound     = lazy(() => import('./pages/NotFound'));
+
+
+function PageLoader() {
+  return (
+    <div className="flex items-center justify-center min-h-[60vh]">
+      <div className="flex flex-col items-center gap-4">
+        <div className="w-10 h-10 rounded-full border-2 border-saffron border-t-transparent animate-spin" />
+        <p className="text-sm opacity-50">Loading…</p>
+      </div>
+    </div>
+  );
+}
 
 function AnimatedRoutes({ addToCart }: { addToCart: (item: MenuItem) => void }) {
   const location = useLocation();
@@ -30,21 +43,24 @@ function AnimatedRoutes({ addToCart }: { addToCart: (item: MenuItem) => void }) 
         exit={{ opacity: 0, y: -14, scale: 0.99, filter: 'blur(6px)' }}
         transition={{ duration: 0.48, ease: [0.22, 1, 0.36, 1] }}
       >
-        <Routes location={location}>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/menu" element={<Menu onAddToCart={addToCart} />} />
-          <Route path="/experiences" element={<Experiences />} />
-          <Route path="/testimonials" element={<Testimonials />} />
-          <Route path="/gallery" element={<Gallery />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/order-lookup" element={<OrderLookup />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <Suspense fallback={<PageLoader />}>
+          <Routes location={location}>
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/menu" element={<Menu onAddToCart={addToCart} />} />
+            <Route path="/experiences" element={<Experiences />} />
+            <Route path="/testimonials" element={<Testimonials />} />
+            <Route path="/gallery" element={<Gallery />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/order-lookup" element={<OrderLookup />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Suspense>
       </motion.div>
     </AnimatePresence>
   );
 }
+
 
 export default function App() {
   const [isDarkMode, setIsDarkMode] = useState(() => {

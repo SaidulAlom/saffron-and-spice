@@ -22,6 +22,9 @@ import CartSidebar from './CartSidebar';
 import ReservationModal from './ReservationModal';
 import MotionEffects from './MotionEffects';
 import { MenuItem } from '../constants';
+import { prefetch } from '../hooks/useSupabase';
+import { fetchMenuItems, fetchTestimonials, fetchGalleryImages } from '../lib/db';
+
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -53,15 +56,16 @@ export default function Layout({ children, cartItems, updateQuantity, removeFrom
   const cartCount = cartItems.reduce((sum, i) => sum + i.quantity, 0);
 
   const navLinks = [
-    { name: 'Home', path: '/' },
-    { name: 'About', path: '/about' },
-    { name: 'Menu', path: '/menu' },
-    { name: 'Track Order', path: '/order-lookup' },
-    { name: 'Experiences', path: '/experiences' },
-    { name: 'Testimonials', path: '/testimonials' },
-    { name: 'Gallery', path: '/gallery' },
-    { name: 'Contact', path: '/contact' },
-  ];
+    { name: 'Home',         path: '/',            prefetchFn: undefined },
+    { name: 'About',        path: '/about',        prefetchFn: undefined },
+    { name: 'Menu',         path: '/menu',         prefetchFn: fetchMenuItems },
+    { name: 'Track Order',  path: '/order-lookup', prefetchFn: undefined },
+    { name: 'Experiences',  path: '/experiences',  prefetchFn: undefined },
+    { name: 'Testimonials', path: '/testimonials', prefetchFn: fetchTestimonials },
+    { name: 'Gallery',      path: '/gallery',      prefetchFn: fetchGalleryImages },
+    { name: 'Contact',      path: '/contact',      prefetchFn: undefined },
+  ] as const;
+
 
   const footerLinks = [
     { name: 'About Us', path: '/about' },
@@ -99,12 +103,14 @@ export default function Layout({ children, cartItems, updateQuantity, removeFrom
                 to={link.path} 
                 className={`text-sm font-medium hover:text-saffron transition-colors relative group nav-link ${location.pathname === link.path ? 'text-saffron' : ''}`}
                 data-cursor="hover"
+                onMouseEnter={link.prefetchFn ? () => prefetch(link.prefetchFn!) : undefined}
               >
                 {link.name}
                 <span className={`absolute -bottom-1 left-0 h-0.5 bg-saffron transition-all ${location.pathname === link.path ? 'w-full' : 'w-0 group-hover:w-full'}`} />
               </Link>
             ))}
           </div>
+
 
           <div className="flex items-center gap-4">
             <button onClick={() => setIsDarkMode(!isDarkMode)} className="p-2 hover:bg-black/5 dark:hover:bg-white/5 rounded-full transition-colors micro-button" aria-label="Toggle color theme">

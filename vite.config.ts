@@ -17,6 +17,10 @@ export default defineConfig(() => {
           manualChunks: {
             vendor: ['react', 'react-dom', 'react-router-dom'],
             motion: ['motion'],
+            // Keep data-heavy pages in their own async chunks
+            'page-menu':         ['./src/pages/Menu'],
+            'page-gallery':      ['./src/pages/Gallery'],
+            'page-testimonials': ['./src/pages/Testimonials'],
           },
         },
       },

@@ -1,28 +1,33 @@
 import React, { useState, useEffect } from 'react';
 
+const FALLBACK =
+  'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=800';
+
 interface ImageWithFallbackProps extends React.ComponentPropsWithoutRef<'img'> {
   fallbackSrc?: string;
 }
 
-export const ImageWithFallback: React.FC<ImageWithFallbackProps> = ({ 
-  src, 
-  alt, 
-  fallbackSrc = 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=800',
+export const ImageWithFallback: React.FC<ImageWithFallbackProps> = ({
+  src,
+  alt,
+  fallbackSrc = FALLBACK,
   className,
-  ...props 
+  loading = 'lazy',   // ← lazy-load by default; caller can pass "eager" for above-the-fold
+  decoding = 'async', // ← don't block the main thread for image decode
+  ...props
 }) => {
   const [imgSrc, setImgSrc] = useState(src);
-  const [error, setError] = useState(false);
+  const [errored, setErrored] = useState(false);
 
   useEffect(() => {
     setImgSrc(src);
-    setError(false);
+    setErrored(false);
   }, [src]);
 
   const handleError = () => {
-    if (!error) {
+    if (!errored) {
       setImgSrc(fallbackSrc);
-      setError(true);
+      setErrored(true);
     }
   };
 
@@ -32,6 +37,8 @@ export const ImageWithFallback: React.FC<ImageWithFallbackProps> = ({
       alt={alt}
       onError={handleError}
       className={className}
+      loading={loading}
+      decoding={decoding}
       {...props}
     />
   );
